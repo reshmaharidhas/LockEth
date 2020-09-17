@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-147357385-1"></script>
+		<script>
+  			window.dataLayer = window.dataLayer || [];
+  			function gtag(){dataLayer.push(arguments);}
+  			gtag('js', new Date());
+
+  			gtag('config', 'UA-147357385-1');
+		</script>
+
+        <title>LockEth - A Decentralized Secure Password Manager</title>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Reshma Haridhas" />
+		<meta name="description" content="LockEth" />
+		<link rel="icon" href="favicon.ico" type="image/x-icon">
+		<link rel="icon" href="https://reshmaharidhas.000webhostapp.com/locketh/a.png" sizes="32x32" type="image/png">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<link href='https://fonts.googleapis.com/css?family=Headland One' rel='stylesheet'>
+		<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<style>
+			#signform {
+				background:linear-gradient(to bottom, #ff0066 0%, #ff6699 100%);
+			}
+			label{
+				color: black;
+			}
+		</style> 
+		
+	</head>
+	<body class="blue lighten-4">
+		<div class="w3-container white-text w3-padding w3-center" style="background-color:#131E3A">
+			<img src="a.png" style="width: 90px;float: left;" class="brand-logo" />
+			<h4>LockEth</h4>
+			<h6 class="w3-small">Decentralized Password Manager</h6><br>
+		</div>
+		<div class="blue accent-2 center w3-small w3-padding">
+			<a href="demo.html" class="w3-hover-blue black-text"><i class="fas fa-play-circle"></i> Watch Demo </a>|
+			<a href="howitworks.html" class="w3-hover-blue black-text">Compatibility </a>|
+			<a href="features.html" class="w3-hover-blue black-text">Features</a> |
+			<a href="screenshots.html" class="w3-hover-blue black-text">Screenshots</a>
+		</div>
+		<center><p id='logstatus' class="w3-center w3-tag w3-white"></p></center>
+        <div class="w3-container w3-mobile w3-padding">
+			<center>
+			<div class="card red w3-round w3-border-black" style="width: 300px;" id="base">
+				<div class="w3-bar">
+					<div class="w3-bar-item w3-pink w3-padding white-text" id="signuptab" style="width: 150px;"><h6>Sign Up</h6></div>
+					<div class="w3-bar-item w3-padding white-text" id="signintab" style="width: 150px;background-color: #0E4C92;"><h6>Sign In</h6></div>
+				</div>
+				<div class="w3-container black-text w3-padding" id="signform">
+					<br>
+					<div class="input-field">
+						<label id="namelabel" class="w3-text-black"><i class="material-icons left">person</i>Name</label>
+						<input type="text" id="name" class="validate"><br>
+					</div>
+					<div class="input-field">
+						<label class="w3-text-black"><i class="material-icons left">email</i>Email</label>
+						<input type="text" id="email"><br>
+					</div>
+					<div class="input-field">
+						<label class="w3-text-black"><i class="material-icons left">lock</i>Password</label>
+						<input type="password" id="psd" class="w3-input">
+					</div>
+						<br><br>
+					<button id='signUp' class="btn black waves-effect waves-light">
+						Sign Up
+					</button>
+					<button type="button" id="signIn" class="btn waves-effect waves-light black" style="display: none;">
+						Sign In
+					</button>
+					<br>
+				</div>
+			</div>
+			<div id="registerStatus"></div>
+			<a href="my_page.html">
+				<img src="enter.png" style="width: 50px;display: none;" id="enterbtn" class="w3-image"/>
+			</a>
+			</center>
+			<button id="logout" class="btn waves-effect waves-light  red darken-4 w3-round-xlarge w3-tiny" style="float: right;background-color: crimson;">
+				Logout
+			</button>
+		</div>
+		<script src="myscript.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		
+		
+        <script>
+            var contract;
+            $(document).ready(function()
+            {
+                web3 = new Web3(web3.currentProvider);
+                var address = "0xca18f3c0ce4337dbe8943ed1d7bf3956160ccdc4";
+                var abi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "num",
+				"type": "uint256"
+			},
+			{
+				"name": "_appUsername",
+				"type": "string"
+			},
+			{
+				"name": "_appPassword",
+				"type": "string"
+			}
+		],
+		"name": "addAccount",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_appUsername",
+				"type": "string"
+			},
+			{
+				"name": "_appPassword",
+				"type": "string"
+			}
+		],
+		"name": "addGoogleAcc",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "checkTime",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_num",
+				"type": "uint256"
+			}
+		],
+		"name": "getAccount",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "getGoogleAcc",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_uEmailId",
+				"type": "string"
+			},
+			{
+				"name": "_uPass",
+				"type": "string"
+			}
+		],
+		"name": "signInUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "signOutUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_uEmailId",
+				"type": "string"
+			},
+			{
+				"name": "_uPass",
+				"type": "string"
+			},
+			{
+				"name": "_uName",
+				"type": "string"
+			}
+		],
+		"name": "signUpUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "timeout",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "_events",
+		"outputs": [
+			{
+				"name": "event_startTime",
+				"type": "uint256"
+			},
+			{
+				"name": "event_endTime",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "comments",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "endTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getComments",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getCurrentTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "num",
+				"type": "uint256"
+			}
+		],
+		"name": "getUserAt",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getUserName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getUsersCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getX",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getY",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "matchAddrToEmail",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "myAccAvail",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "myLogins",
+		"outputs": [
+			{
+				"name": "fileApplicationName",
+				"type": "string"
+			},
+			{
+				"name": "appUsername",
+				"type": "string"
+			},
+			{
+				"name": "appPassword",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "myVault",
+		"outputs": [
+			{
+				"name": "filenum",
+				"type": "uint256"
+			},
+			{
+				"name": "appUsername",
+				"type": "string"
+			},
+			{
+				"name": "appPassword",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "startTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "stats",
+		"outputs": [
+			{
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "userCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "userEmailRegisterStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "userList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userLogin",
+		"outputs": [
+			{
+				"name": "useremailid",
+				"type": "string"
+			},
+			{
+				"name": "userpassword",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userLoginStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userProfile",
+		"outputs": [
+			{
+				"name": "userEthAddress",
+				"type": "address"
+			},
+			{
+				"name": "userEmail",
+				"type": "string"
+			},
+			{
+				"name": "userPassword",
+				"type": "string"
+			},
+			{
+				"name": "userName",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userRegisterStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "x",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "y",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+                
+                contract = new web3.eth.Contract(abi, address);
+            })
+
+			$('#signuptab').click(function(){
+				$('#name').show();
+				$('#namelabel').show();
+				$('#signUp').show();
+				$('#signIn').hide();
+				$('#signform').css({
+    				background: "-webkit-gradient(linear, left top, left bottom, from(#ff0066), to(#ff6699))" 
+				});
+			});
+			$('#signintab').click(function(){
+				$('#name').hide();
+				$('#namelabel').hide();
+				$('#signUp').hide();
+				$('#signIn').show();
+				$('#signform').css({
+    				background: "-webkit-gradient(linear, left top, left bottom, from(#0E4C92), to(#95C8D8))" 
+				});
+			});
+
+			$('#signUp').click(function()
+            {
+				var status = "You signed up to LockEth";
+                var _userName, _userEmail, _userPassword;
+            
+                _userName = $('#name').val();
+                _userEmail = $('#email').val();
+                _userPassword = $('#psd').val();
+                web3.eth.getAccounts().then(function(accounts)
+                {
+                    var acc = accounts[0];
+                    return contract.methods.signUpUser(_userEmail, _userPassword, _userName).send({from: acc});
+                }).then(function(tx)
+                {
+                    console.log(tx);
+					$('#registerStatus').html(status);
+                }).catch(function(tx)
+                {
+                    console.log(tx);
+                })
+            })
+
+			$('#signIn').click(function()
+            {
+                var _userEmail, _userPassword;
+                _userEmail = $('#email').val();
+                _userPassword = $('#psd').val();
+                web3.eth.getAccounts().then(function(accounts)
+                {
+                    var acc = accounts[0];
+                    return contract.methods.signInUser(_userEmail,_userPassword).send({from: acc});
+                }).then(function(tx)
+                {
+                    console.log(tx);	
+                    $("#enterbtn").show();
+                }).catch(function(tx)
+                {
+                    console.log(tx);
+                })
+            })
+
+
+            $('#logout').click(function()
+            {   
+                var logoutStatement = "Logged out";
+                web3.eth.getAccounts().then(function(accounts)
+                {
+                    var acc = accounts[0];
+                    return contract.methods.signOutUser().send({from: acc});
+                }).then(function(tx)
+                {
+                    console.log(tx);
+					$('#logstatus').html(logoutStatement);
+					$("#enterbtn").hide();
+                }).catch(function(tx)
+                {
+                    console.log(tx);
+                })
+            })
+
+		</script>
+	
+		<footer class="w3-container w3-black w3-tiny w3-center">
+			<p>Copyright &copy; 2019 LOCKETH.COM All Rights Reserved</p>
+		</footer>
+	</body>
+	
+</html>
