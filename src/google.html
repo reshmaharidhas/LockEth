@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-147357385-1"></script>
+		<script>
+  			window.dataLayer = window.dataLayer || [];
+  			function gtag(){dataLayer.push(arguments);}
+  			gtag('js', new Date());
+
+  			gtag('config', 'UA-147357385-1');
+		</script>
+        <title>LockEth | Google</title>
+        <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Reshma Haridhas" />
+		<meta name="description" content="LockEth" />
+		<link rel="icon" href="favicon.ico" type="image/x-icon">
+		<link rel="icon" href="https://reshmaharidhas.000webhostapp.com/locketh/a.png" sizes="32x32" type="image/png">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" type="text/css" href="index.css">
+		<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<style>
+			#signform {
+				background:linear-gradient(to bottom, #ff0066 0%, #ff6699 100%);
+			}
+			body{
+				background-color: #A1CCF3;
+			}
+		</style> 
+	</head>
+    <body>
+		<div class="w3-container w3-text-white w3-center w3-padding" style="background-color:#131E3A">
+			<img src="a.png" style="width: 90px;float: left;" class="brand-logo" />
+			<h4>LockEth</h4>
+			<h6 class="w3-small">Decentralized Password Manager</h6><br>
+			<div class="w3-container">
+			<a href="locketh.html"><i class="fa fa-home" style="float: left;"></i></a>
+			</div>
+        </div>
+        <div class="w3-container w3-mobile w3-row-padding">
+            <br>
+            <center>
+			<div id="cmmt" class="badge red white-text w3-center w3-mobile" style="width: 400px;"></div>
+            <div class="w3-half w3-padding">
+				<div class="card w3-padding w3-mobile white-text" style="width:450px;background-color:#131E3A">
+					<div>
+						<img src="icon_google.png" class="circle" /><br>
+						Google
+					</div>
+					<h4>ADD</h4>
+					<div class="input-field">
+                    	<label>Enter username or email</label>
+						<input type="text" id="uname" class="white-text">
+					</div>
+					<div class="input-field">
+                    	<label>Enter password</label>
+						<input type="password" id="upassword" class="white-text">
+					</div>
+                    <button class="btn blue waves-effect waves-light" id='store'>Store<i class="material-icons right">lock</i></button><br>
+                </div>
+            </div>
+            <div class="w3-half w3-padding">
+                <div class="card w3-padding w3-mobile white-text" style="width:350px;background-color:#131E3A;">
+                    <h4>VIEW</h4>
+                    Username: <p id="userid" class="white-text"></p><br>
+                    Password: <p id="userpassword" class="white-text"></p><br>
+                    <button class="btn blue waves-effect waves-light" id='view'>Reveal<i class="material-icons right">lock_open</i></button>
+                </div>
+            </div>
+			</center>
+		</div>
+		<script src="myscript.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+		<!-- Compiled and minified JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+		
+        <script>
+            var contract;
+            $(document).ready(function()
+            {
+                web3 = new Web3(web3.currentProvider);
+                var address = "0xca18f3c0ce4337dbe8943ed1d7bf3956160ccdc4";
+                var abi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "num",
+				"type": "uint256"
+			},
+			{
+				"name": "_appUsername",
+				"type": "string"
+			},
+			{
+				"name": "_appPassword",
+				"type": "string"
+			}
+		],
+		"name": "addAccount",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_appUsername",
+				"type": "string"
+			},
+			{
+				"name": "_appPassword",
+				"type": "string"
+			}
+		],
+		"name": "addGoogleAcc",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "checkTime",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_num",
+				"type": "uint256"
+			}
+		],
+		"name": "getAccount",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "getGoogleAcc",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_uEmailId",
+				"type": "string"
+			},
+			{
+				"name": "_uPass",
+				"type": "string"
+			}
+		],
+		"name": "signInUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "signOutUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_uEmailId",
+				"type": "string"
+			},
+			{
+				"name": "_uPass",
+				"type": "string"
+			},
+			{
+				"name": "_uName",
+				"type": "string"
+			}
+		],
+		"name": "signUpUser",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "timeout",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "_events",
+		"outputs": [
+			{
+				"name": "event_startTime",
+				"type": "uint256"
+			},
+			{
+				"name": "event_endTime",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "comments",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "endTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getComments",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getCurrentTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "num",
+				"type": "uint256"
+			}
+		],
+		"name": "getUserAt",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getUserName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getUsersCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getX",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getY",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "matchAddrToEmail",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "myAccAvail",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "myLogins",
+		"outputs": [
+			{
+				"name": "fileApplicationName",
+				"type": "string"
+			},
+			{
+				"name": "appUsername",
+				"type": "string"
+			},
+			{
+				"name": "appPassword",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "myVault",
+		"outputs": [
+			{
+				"name": "filenum",
+				"type": "uint256"
+			},
+			{
+				"name": "appUsername",
+				"type": "string"
+			},
+			{
+				"name": "appPassword",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "startTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "stats",
+		"outputs": [
+			{
+				"name": "",
+				"type": "int256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "userCount",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"name": "userEmailRegisterStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "userList",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userLogin",
+		"outputs": [
+			{
+				"name": "useremailid",
+				"type": "string"
+			},
+			{
+				"name": "userpassword",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userLoginStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userProfile",
+		"outputs": [
+			{
+				"name": "userEthAddress",
+				"type": "address"
+			},
+			{
+				"name": "userEmail",
+				"type": "string"
+			},
+			{
+				"name": "userPassword",
+				"type": "string"
+			},
+			{
+				"name": "userName",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "userRegisterStatus",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "x",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "y",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+                
+                contract = new web3.eth.Contract(abi, address);
+				
+            })
+
+			$('#store').click(function()
+            {
+				var status = "Added successfully";
+				var fail = "Timeout. Log in Again";
+                var _uname, _upassword;
+            
+                _uname = $('#uname').val();
+                _upassword = $('#upassword').val();
+                web3.eth.getAccounts().then(function(accounts)
+                {
+                    var acc = accounts[0];
+                    return contract.methods.addAccount(1,_uname,_upassword).send({from: acc});
+                }).then(function(tx)
+                {
+                    console.log(tx);
+					contract.methods.getComments().call().then(function(bal)
+                    {
+						if(bal=="Timeout Sign in Again"){
+                            $('#cmmt').html(bal);	
+                        } else {
+                            $('#cmmt').html(status);	
+                        }	
+					})
+					
+                }).catch(function(tx)
+                {
+                    console.log(tx);
+					$('#cmmt').html(fail);
+                })
+            })
+
+            $('#view').click(function()
+            {
+				var fail = "Timeout. Log in Again";
+                web3.eth.getAccounts().then(function(accounts)
+                {
+                    var acc = accounts[0];
+                    return contract.methods.getAccount(1).send({from: acc});
+                }).then(function(tx)
+                {
+                    console.log(tx);
+                    contract.methods.getX().call().then(function(bal)
+                    {
+                        $('#userid').html(bal);
+        	        })
+                    contract.methods.getY().call().then(function(bal)
+                    {
+                        $('#userpassword').html(bal);
+        	        })
+                }).catch(function(tx)
+                {
+                    console.log(tx);
+					$('#cmmt').html(fail);
+                })
+            })
+
+		</script>
+		<footer class="w3-container w3-footer black white-text w3-tiny w3-center">
+			<p>Copyright &copy; 2019 LOCKETH.COM All Rights Reserved</p>
+		</footer>
+    </body>
+</html>

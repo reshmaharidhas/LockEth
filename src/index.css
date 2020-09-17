@@ -1,0 +1,14 @@
+#signform {
+    background: linear-gradient(to bottom, #ff0066 0%, #ff6699 100%);
+}
+
+@media only screen and (max-width: 800px) {
+    #base{
+        width: 250px;
+   }
+   
+    #alp{
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
