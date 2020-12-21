@@ -1,5 +1,12 @@
 # LockEth - Decentralized Password Manager
 
+<p align="center">
+  <img src="https://img.shields.io/github/stars/reshmaharidhas/LockEth?style=social">
+  <img src="https://img.shields.io/github/forks/reshmaharidhas/LockEth?style=social">
+  <img src="https://img.shields.io/github/repo-size/reshmaharidhas/LockEth">
+  <img src="https://img.shields.io/github/license/reshmaharidhas/LockEth">
+</p>
+
 LockEth is a decentralised application build on Ethereum blockchain. LockEth is used to store and manage password in a secured and encrypted way. Build on Ethereum blockchain technology, this is a tamper-proof and secured DAPP. 
 
 Deployed in Ropsten test network.
