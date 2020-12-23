@@ -3,6 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/github/stars/reshmaharidhas/LockEth?style=social">
   <img src="https://img.shields.io/github/forks/reshmaharidhas/LockEth?style=social">
+  <img src="https://img.shields.io/tokei/lines/github/reshmaharidhas/LockEth">
   <img src="https://img.shields.io/github/repo-size/reshmaharidhas/LockEth">
   <img src="https://img.shields.io/badge/License-BSD%203--Clause-success">
   
