@@ -17,4 +17,6 @@ locketh.html is the homepage to signup for new users and for signing in to the d
 
 Visit Dapp published in StateoftheDapps : https://www.stateofthedapps.com/dapps/locketh
 
+### License
+Not authorized to copy or distribute or resell this product as a product developed by yourself.
 
